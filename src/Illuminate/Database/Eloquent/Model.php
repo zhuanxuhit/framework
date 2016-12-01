@@ -127,21 +127,21 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 
     /**
      * The attributes that are mass assignable.
-     *
+     * => 可以被赋值属性的“白名单”
      * @var array
      */
     protected $fillable = [];
 
     /**
      * The attributes that aren't mass assignable.
-     *
+     * => 可以被赋值属性的“黑名单”
      * @var array
      */
     protected $guarded = ['*'];
 
     /**
      * The attributes that should be mutated to dates.
-     *
+     * => 除了 create_at 和 update_at 之外的时间属性，如软删除需要的 deleted_at
      * @var array
      */
     protected $dates = [];
@@ -283,9 +283,9 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
     public function __construct(array $attributes = [])
     {
         $this->bootIfNotBooted();
-
+        //=> 保留原始数据
         $this->syncOriginal();
-
+        //=> 根据 fillable 和 guarded 来填充数据
         $this->fill($attributes);
     }
 
@@ -328,6 +328,7 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 
         foreach (class_uses_recursive($class) as $trait) {
             if (method_exists($class, $method = 'boot'.class_basename($trait))) {
+                //=>此处 forward_static_call 将 late static binding 传递过去
                 forward_static_call([$class, $method]);
             }
         }
@@ -2365,6 +2366,7 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
      */
     public function isFillable($key)
     {
+        //=> 全局设置
         if (static::$unguarded) {
             return true;
         }
@@ -2372,14 +2374,15 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
         // If the key is in the "fillable" array, we can of course assume that it's
         // a fillable attribute. Otherwise, we will check the guarded array when
         // we need to determine if the attribute is black-listed on the model.
+        //=> fillable 是白名单
         if (in_array($key, $this->getFillable())) {
             return true;
         }
-
+        // => guarded 是黑名单
         if ($this->isGuarded($key)) {
             return false;
         }
-
+        //=> 如果没有设置 fillable， 并且 key 也不是 _ 开头
         return empty($this->getFillable()) && ! Str::startsWith($key, '_');
     }
 

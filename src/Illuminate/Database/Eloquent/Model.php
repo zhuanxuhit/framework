@@ -106,21 +106,21 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 
     /**
      * The attributes that should be hidden for arrays.
-     *
+     * => 哪些字段不会展示出来
      * @var array
      */
     protected $hidden = [];
 
     /**
      * The attributes that should be visible in arrays.
-     *
+     * => 哪些字段可见
      * @var array
      */
     protected $visible = [];
 
     /**
      * The accessors to append to the model's array form.
-     *
+     * => 创建出来的虚拟属性
      * @var array
      */
     protected $appends = [];
@@ -155,7 +155,7 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 
     /**
      * The attributes that should be cast to native types.
-     *
+     * => 进行简单的转换
      * @var array
      */
     protected $casts = [];
@@ -525,7 +525,7 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 
     /**
      * Create a collection of models from plain arrays.
-     *
+     * => 将一组数据转换为对象集合
      * @param  array  $items
      * @param  string|null  $connection
      * @return \Illuminate\Database\Eloquent\Collection

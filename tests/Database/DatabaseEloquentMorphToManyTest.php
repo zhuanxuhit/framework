@@ -1,9 +1,12 @@
 <?php
 
+namespace Illuminate\Tests\Database;
+
 use Mockery as m;
+use PHPUnit\Framework\TestCase;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
-class DatabaseEloquentMorphToManyTest extends PHPUnit_Framework_TestCase
+class DatabaseEloquentMorphToManyTest extends TestCase
 {
     public function tearDown()
     {
@@ -71,7 +74,7 @@ class DatabaseEloquentMorphToManyTest extends PHPUnit_Framework_TestCase
     {
         list($builder, $parent) = $this->getRelationArguments();
 
-        return new MorphToMany($builder, $parent, 'taggable', 'taggables', 'taggable_id', 'tag_id');
+        return new MorphToMany($builder, $parent, 'taggable', 'taggables', 'taggable_id', 'tag_id', 'id');
     }
 
     public function getRelationArguments()
@@ -95,11 +98,11 @@ class DatabaseEloquentMorphToManyTest extends PHPUnit_Framework_TestCase
         $builder->shouldReceive('where')->once()->with('taggables.taggable_id', '=', 1);
         $builder->shouldReceive('where')->once()->with('taggables.taggable_type', get_class($parent));
 
-        return [$builder, $parent, 'taggable', 'taggables', 'taggable_id', 'tag_id', 'relation_name', false];
+        return [$builder, $parent, 'taggable', 'taggables', 'taggable_id', 'tag_id', 'id', 'relation_name', false];
     }
 }
 
-class EloquentMorphToManyModelStub extends Illuminate\Database\Eloquent\Model
+class EloquentMorphToManyModelStub extends \Illuminate\Database\Eloquent\Model
 {
     protected $guarded = [];
 }

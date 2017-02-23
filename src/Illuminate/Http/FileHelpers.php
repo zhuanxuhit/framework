@@ -2,10 +2,17 @@
 
 namespace Illuminate\Http;
 
-use Ramsey\Uuid\Uuid;
+use Illuminate\Support\Str;
 
 trait FileHelpers
 {
+    /**
+     * The cache copy of the file's hash name.
+     *
+     * @var string
+     */
+    protected $hashName = null;
+
     /**
      * Get the fully qualified path to the file.
      *
@@ -48,6 +55,8 @@ trait FileHelpers
             $path = rtrim($path, '/').'/';
         }
 
-        return $path.Uuid::uuid4()->getHex().'.'.$this->guessExtension();
+        $hash = $this->hashName ?: $this->hashName = Str::random(40);
+
+        return $path.$hash.'.'.$this->guessExtension();
     }
 }
